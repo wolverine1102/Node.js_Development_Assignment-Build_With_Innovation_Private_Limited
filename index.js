@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const app = express();
+const db = require('./src/config/index');
 
 app.use(express.json());
 
