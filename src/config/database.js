@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
-const MONGO_USERNAME = 'admin';
-const MONGO_PASSWORD = 'password';
-const MONGO_HOSTNAME = '127.0.0.1';
-const MONGO_PORT = '27017';
-const MONGO_DB = 'DB';
+dotenv.config();
+
+const MONGO_USERNAME = process.env.MONGO_USERNAME;
+const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
+const MONGO_HOSTNAME = process.env.MONGO_HOSTNAME;
+const MONGO_PORT = process.env.MONGO_PORT;
+const MONGO_DB = process.env.MONGO_DB;
 
 const url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
 
@@ -16,6 +19,9 @@ const db = mongoose.connection;
 db.on('error', (error) => {
     console.log(error)
 });
-db.once('connected', () => {
+db.on('connected', () => {
     console.log('Database Connected...');
+});
+db.on('disconnected', () => {
+    console.log('Database Disconnected...')
 });
