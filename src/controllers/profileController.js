@@ -66,8 +66,6 @@ const updateProfile = async function (req, res) {
                     })
                 }
             })
-
-
     }
     catch (error) {
         console.error(error);
