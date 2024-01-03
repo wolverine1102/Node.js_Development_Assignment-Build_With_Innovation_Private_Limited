@@ -104,7 +104,7 @@ const login = async function (req, res) {
         if (_.keys(errors).length > 0) {
             if (_.hasIn(errors, 'email') && _.hasIn(errors, 'phone')) {
                 return res.status(400).json({
-                    message: "Provide either an email or a phone number."
+                    message: "Provide one of the following: email or phone."
                 });
             }
             else if (_.hasIn(errors, 'password')) {

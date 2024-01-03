@@ -7,6 +7,7 @@ const getProfile = async function (req, res) {
             .then((user) => {
                 if (user) {
                     return res.status(200).json({
+                        success: true,
                         data: {
                             email: user.email,
                             phone: user.phone,

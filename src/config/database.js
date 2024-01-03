@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const seedAdmin = require('../seed/seedAdmin').seedAdmin;
 
 dotenv.config();
 
@@ -25,3 +26,5 @@ db.on('connected', () => {
 db.on('disconnected', () => {
     console.log('Database Disconnected...')
 });
+
+seedAdmin(); //Adding admin to the database

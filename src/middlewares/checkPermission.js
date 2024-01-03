@@ -8,7 +8,7 @@ const checkPermission = (action, resource) => {
                 .then((user) => {
                     const permission = ac.can(user.role)[action](resource);
                     if (!permission.granted) {
-                        return res.status(403).json({ error: 'Permission denied' });
+                        return res.status(403).json({ error: 'Access denied' });
                     }
                     next();
                 })
