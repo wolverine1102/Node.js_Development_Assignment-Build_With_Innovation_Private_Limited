@@ -9,6 +9,7 @@ ac.grant('user')
 
 ac.grant('admin')
     .extend('user')
+    .createAny('profile')
     .readAny('profile')
     .updateAny('profile')
     .deleteAny('profile');
