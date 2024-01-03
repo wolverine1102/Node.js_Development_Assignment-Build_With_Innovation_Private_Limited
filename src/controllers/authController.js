@@ -40,7 +40,7 @@ const register = async function (req, res) {
             }
         }
 
-        User.findOne({
+        await User.findOne({
             $or: [
                 { email: email },
                 { phone: phone }
@@ -119,7 +119,7 @@ const login = async function (req, res) {
             })
         };
 
-        User.findOne({
+        await User.findOne({
             $or: [
                 { email: email },
                 { phone: phone }
