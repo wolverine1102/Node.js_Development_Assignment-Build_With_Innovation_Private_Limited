@@ -6,11 +6,13 @@ const checkPermission = (action, resource) => {
         try {
             await User.findById(req.userId)
                 .then((user) => {
-                    const permission = ac.can(user.role)[action](resource);
-                    if (!permission.granted) {
-                        return res.status(403).json({ error: 'Access denied' });
+                    if (user) {
+                        const permission = ac.can(user.role)[action](resource);
+                        if (!permission.granted) {
+                            return res.status(403).json({ error: 'Access denied' });
+                        }
+                        next();
                     }
-                    next();
                 })
         } catch (error) {
             console.error('Permission check error:', error);

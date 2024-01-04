@@ -46,8 +46,8 @@ const register = async function (req, res) {
 
         await User.findOne({
             $or: [
-                { email: email },
-                { phone: phone }
+                { email: { $eq: email ? email : "" } },
+                { phone: { $eq: phone ? phone : "" } }
             ]
         })
             .then(async (user) => {
