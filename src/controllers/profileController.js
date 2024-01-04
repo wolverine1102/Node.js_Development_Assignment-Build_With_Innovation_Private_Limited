@@ -1,4 +1,7 @@
 const _ = require('lodash');
+const path = require('path');
+const fs = require('fs');
+const fse = require('fs-extra');
 const User = require('../models/user');
 
 const getProfile = async function (req, res) {
@@ -6,15 +9,30 @@ const getProfile = async function (req, res) {
         await User.findById(req.userId)
             .then((user) => {
                 if (user) {
-                    return res.status(200).json({
-                        success: true,
-                        data: {
-                            email: user.email,
-                            phone: user.phone,
-                            name: user.name,
-                            profileImage: user.profileImage
-                        }
-                    });
+                    const imagePath = path.join(__dirname, '..', 'uploads', user._id + '/' + user._id + '.jpg');
+                    try {
+                        const profileImage = fs.readFileSync(imagePath, 'base64');
+                        res.status(200).json({
+                            success: true,
+                            data: {
+                                email: user.email,
+                                phone: user.phone,
+                                name: user.name,
+                                profileImage: profileImage
+                            }
+                        })
+                    }
+                    catch (error) {
+                        res.status(200).json({
+                            success: true,
+                            data: {
+                                email: user.email,
+                                phone: user.phone,
+                                name: user.name,
+                                profileImage: 'Profile image not found'
+                            }
+                        })
+                    }
                 }
                 else {
                     return res.status(401).json({
@@ -36,30 +54,55 @@ const getProfile = async function (req, res) {
 
 const updateProfile = async function (req, res) {
     try {
+        const uploadedFile = req.file;
         const updates = {};
-
-        ['name', 'profileImage'].forEach((key) => {
-            if (_.hasIn(req.body, key)) {
-                updates[key] = req.body[key];
-            }
-        })
+        if (_.hasIn(req.body, 'name')) {
+            updates['name'] = req.body['name'];
+        }
 
         await User.findByIdAndUpdate(
-            req.userId, 
+            req.userId,
             updates,
             { new: true }
-            )
-            .then((updatedUser) => {
+        )
+            .then(async (updatedUser) => {
                 if (updatedUser) {
-                    res.status(200).json({
-                        success: true,
-                        data: {
-                            email: updatedUser.email,
-                            phone: updatedUser.phone,
-                            name: updatedUser.name,
-                            profileImage: updatedUser.profileImage
+                    const userId = updatedUser._id.toJSON();
+                    if (uploadedFile) {
+                        const userFolder = path.join(__dirname, '..', 'uploads', userId);
+                        // Create the user folder if it doesn't exist
+                        if (!fs.existsSync(userFolder)) {
+                            fs.mkdirSync(userFolder);
                         }
-                    })
+
+                        const destinationFile = path.join(userFolder, userId + '.jpg');
+                        await fse.move(uploadedFile.path, destinationFile, { overwrite: true });
+                    }
+                    try {
+                        const imagePath = path.join(__dirname, '..', 'uploads', userId + '/' + userId + '.jpg');
+                        const profileImage = fs.readFileSync(imagePath, 'base64');
+
+                        res.status(200).json({
+                            success: true,
+                            data: {
+                                email: updatedUser.email,
+                                phone: updatedUser.phone,
+                                name: updatedUser.name,
+                                profileImage: profileImage
+                            }
+                        })
+                    }
+                    catch (error) {
+                        res.status(200).json({
+                            success: true,
+                            data: {
+                                email: updatedUser.email,
+                                phone: updatedUser.phone,
+                                name: updatedUser.name,
+                                profileImage: 'Profile image not found'
+                            }
+                        })
+                    }
                 }
                 else {
                     return res.status(401).json({

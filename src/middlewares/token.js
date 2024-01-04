@@ -11,7 +11,7 @@ const generateAccessToken = function (userId) {
 
 const authenticateToken = function (req, res, next) {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];  //Authorization: 'Bearer TOKEN'
+    const token = authHeader && authHeader.split(' ')[1];  // Authorization: 'Bearer TOKEN'
     
     if (token == null) {
         res.status(401).json({

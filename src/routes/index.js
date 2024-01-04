@@ -4,15 +4,16 @@ const profileController = require('../controllers/profileController');
 const adminController = require('../controllers/adminController');
 const token = require('../middlewares/token');
 const checkPermission  = require('../middlewares/checkPermission').checkPermission;
+const upload = require('../middlewares/multerConfig');
 
 const router = Router();
 const authenticateToken = token.authenticateToken;
 
-router.post('/register', authController.register);
+router.post('/register', upload.single('profileImage'), authController.register);
 router.post('/login', authController.login);
 
 router.get('/user/profile', authenticateToken, checkPermission('readOwn', 'profile'), profileController.getProfile);
-router.put('/user/profile', authenticateToken, checkPermission('updateOwn', 'profile'), profileController.updateProfile);
+router.put('/user/profile', authenticateToken, checkPermission('updateOwn', 'profile'), upload.single('profileImage'), profileController.updateProfile);
 router.delete('/user/profile', authenticateToken, checkPermission('deleteOwn', 'profile'), profileController.deleteProfile);
 
 router.get('/admin/profiles', authenticateToken, checkPermission('readAny', 'profile'), adminController.getAllProfiles);

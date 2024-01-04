@@ -1,5 +1,8 @@
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
+const path = require('path');
+const fs = require('fs');
+const fse = require('fs-extra');
 const User = require('../models/user');
 const token = require('../middlewares/token');
 
@@ -16,7 +19,8 @@ const validateUser = async function (password, hash) {
 const register = async function (req, res) {
     try {
         let errors = {};
-        const { email, phone, name, profileImage, password } = req.body;
+        const uploadedFile = req.file;
+        const { email, phone, name, password } = req.body;
 
         ['email', 'phone', 'password'].forEach(key => {
             if (req.body[key] === null || req.body[key] === undefined) {
@@ -48,6 +52,8 @@ const register = async function (req, res) {
         })
             .then(async (user) => {
                 if (user) {
+                    // If user authentication fails, delete the uploaded file
+                    fs.unlinkSync(uploadedFile.path);
                     res.status(400).json({
                         message: "User already exists"
                     });
@@ -59,18 +65,29 @@ const register = async function (req, res) {
                         email,
                         phone,
                         name,
-                        profileImage,
                         password: hashedPassword
                     })
 
                     await newUser.save();
+
+                    const userId = newUser._id.toJSON();
+
+                    if (uploadedFile) {
+                        const newUserFolder = path.join(__dirname, '..', 'uploads', userId);
+                        // Create the user folder if it doesn't exist
+                        if (!fs.existsSync(newUserFolder)) {
+                            fs.mkdirSync(newUserFolder);
+                        }
+                        const destinationFile = path.join(newUserFolder, userId + '.jpg');
+                        await fse.move(uploadedFile.path, destinationFile);
+                    }
 
                     res.status(200).json({
                         success: true,
                         data: {
                             email: newUser.email,
                             phone: newUser.phone,
-                            token: token.generateAccessToken(newUser._id.toJSON())
+                            token: token.generateAccessToken(userId)
                         }
                     });
                 }

@@ -27,4 +27,4 @@ db.on('disconnected', () => {
     console.log('Database Disconnected...')
 });
 
-seedAdmin(); //Adding admin to the database
+seedAdmin(); // Adding admin to the database
