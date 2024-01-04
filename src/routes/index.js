@@ -18,8 +18,8 @@ router.delete('/user/profile', authenticateToken, checkPermission('deleteOwn', '
 
 router.get('/admin/profiles', authenticateToken, checkPermission('readAny', 'profile'), adminController.getAllProfiles);
 router.get('/admin/profile', authenticateToken, checkPermission('readAny', 'profile'), adminController.getProfile);
-router.post('/admin/create', authenticateToken, checkPermission('createAny', 'profile'), adminController.createAdmin);
-router.put('/admin/profile', authenticateToken, checkPermission('updateAny', 'profile'), adminController.updateProfile);
+router.post('/admin/create', authenticateToken, checkPermission('createAny', 'profile'), upload.single('profileImage'), adminController.createAdmin);
+router.put('/admin/profile', authenticateToken, checkPermission('updateAny', 'profile'), upload.single('profileImage'), adminController.updateProfile);
 router.delete('/admin/profile', authenticateToken, checkPermission('deleteAny', 'profile'), adminController.deleteProfile);
 
 module.exports.router = router;

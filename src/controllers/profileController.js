@@ -124,6 +124,14 @@ const deleteProfile = async function (req, res) {
         await User.findByIdAndDelete(req.userId)
             .then((deletedUser) => {
                 if (deletedUser) {
+                    const userId = req.userId;
+                    const profileImage = path.join(__dirname, '..', 'uploads', userId);
+
+                    fse.remove(profileImage, err => {
+                        if (err) return console.error('profileIImage not found.')
+                        console.log('profileImage deleted successfully.')
+                    })
+
                     return res.status(200).json({
                         success: true,
                         data: {
