@@ -11,7 +11,7 @@ const MONGO_PORT = process.env.MONGO_PORT;
 const MONGO_DB = process.env.MONGO_DB;
 
 const url = `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
-
+// const url = `mongodb://${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`
 mongoose.connect(url, { useNewUrlParser: true }).
     catch(error => console.log(error));
 

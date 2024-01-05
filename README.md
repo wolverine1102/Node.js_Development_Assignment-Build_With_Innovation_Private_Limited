@@ -1,4 +1,4 @@
-# Node.js_Development_Assignment-Build_With_Innovation_Private_Limited
+# User_Management_Application_using_Node.js
 
 ## Assignment Requirement
 

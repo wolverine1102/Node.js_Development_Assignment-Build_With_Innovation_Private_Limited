@@ -13,6 +13,11 @@ const checkPermission = (action, resource) => {
                         }
                         next();
                     }
+                    else {
+                        return res.status(401).json({
+                            message: 'User does not exists.'
+                        })
+                    }
                 })
         } catch (error) {
             console.error('Permission check error:', error);

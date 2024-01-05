@@ -1,28 +1,25 @@
 version: '3.7'
 services:
     mongo:
-      image: mongo
+      image: mongo:latest
       ports:
         - 27017:27017
       environment:
         - MONGO_INITDB_ROOT_USERNAME=admin
         - MONGO_INITDB_ROOT_PASSWORD=password
-    
-    mongo-express:
-      image: mongo-express
-      ports:
-        - 8080:8081
-      environment:
-        - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
-        - ME_CONFIG_MONGODB_ADMINPASSWORD=password
-        - ME_CONFIG_MONGODB_SERVER=mongo
 
-    api:
+    express:
       build:
         dockerfile: Dockerfile
-      image: node.js_development_assignment
+      image: user-management-application
       ports:
         - 7050:7050
-
-
-
+      environment:
+        - TOKEN_SECRET=09f26e402586e2faa8da4c98a35f1b20d6b033c6097befa8be3486a829587fe2f90a832bd3ff9d42710a4da095a2ce285b009f0c3730cd9b8e1af3eb84df6611
+        - MONGO_USERNAME=admin
+        - MONGO_PASSWORD=password
+        - MONGO_HOSTNAME=mongo
+        - MONGO_PORT=27017
+        - MONGO_DB=DB
+      depends_on:
+        - mongo

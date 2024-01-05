@@ -1,5 +1,5 @@
 FROM node:18.18.0-alpine
-WORKDIR /home/Node.js_Development_Assignment
+WORKDIR /home/User_Management_Application
 ADD . .
 RUN npm install
 EXPOSE 7050
