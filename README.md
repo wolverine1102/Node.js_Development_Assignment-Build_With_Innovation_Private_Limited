@@ -41,3 +41,11 @@
 ### Data Validation
 14. Data Validation:
     * Implement thorough data validation to ensure the correctness and integrity of input data.
+
+## STEPS :
+```bash
+docker-compose build
+```
+```bash
+docker-compose up
+```
